@@ -1,0 +1,50 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-submit %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Evaluate
+{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col"> 
+            <br/>
+            <h2>Manage Your Bibliography</h2>
+            <BR/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6"> 
+            {% if err != "" %}
+            {{err}}
+            {% endif %}
+
+            <b>Batch Created:</b> {{batch.created}}
+            <br/><br/>
+            <b>Batch Closed:</b> {{batch.modified}}
+            <br/><br/>
+            <b>Number of Bibcodes</b>: {{numbibs}}
+            <br/><br/>
+            <form action="{% url 'export' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="batchid" value="{{batch.id}}">
+                <button type="submit" class="btn btn-primary">Export Bibcodes</button>
+            </form>
+
+            <br/><br/>
+            <a href="/bibmanage/batch">Back to Batches Main</a>
+
+        </div>
+
+
+
+    </div>
+</div>
+
+{% endblock %}

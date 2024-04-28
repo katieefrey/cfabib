@@ -1,0 +1,67 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-help %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Help Page
+{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col"> 
+            <br/>
+            <h2>Classification Instructions</h2>
+            <BR/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-7"> 
+
+            <h3>Basic Instructions</h3>
+            <p>In all interface options, you will see a list of author/affiliation pairs, grouped by article.  Select the checkbox to the left of record you want to modify and click the appropriate button.</p>
+            <p>If the record you are looking at does not have affiliation information, or is unclear, click the Bibcode link to get to the ADS record of the paper.  From there, you can navigate to the full article HTML page or PDF, which you can use to check up on the author's affiliation.  Please check the affiliation for each author record listed in the Bibliography tool.</p>
+            <p>See "<a href="/bibmanage/tips">Classification Tips</a>" for more help with deciding how to classify author/affiliation paris</p>
+            <br/>
+
+            <h3>Interface Options</h3>
+
+            <p>The <strong>Author Update</strong> page is the main record evaluation interface.  Here you are presented with two options: you can look at records that haven't been updated yet, or you can look at records that have already been modified.</p>            
+            <p>The <strong>All Unknowns</strong> section is where all records that haven't yet been classified, plus all records classified as "unknown" are listed.</p>
+            <p>Finally, the <strong>Unverified</strong> interface is where all the records automatically classifying by the import script can be found. Records here should be checked to verify if they belong in the CfA Bibliography or not.  Verification is not necassary, but it is useful to have someone double check how the script is automatically classifying its search results.</p>
+
+            <br/>
+            <h3>Classification Buttons</h3>
+            To being, select the checkbox to the left of record you want to modify and click the appropriate button.<br/><br/>
+            <p><strong>Author Update & Unknown Interface</strong></p>
+            <p>Select the button that best fits the provided affiliation information, or that you find on the paper.</p>
+            <p><button type="button" class="sbutton btn custombtn btn-success">CfA</button>
+                <br/>If the author has a CfA affiliation use this button.  This button and the next button will be used most often.</p>
+            <p><button type="button" class="sbutton btn custombtn btn-warning">Not CfA</button>
+                <br/>If the author does NOT have a CfA affiliation, use this button.  This button and the above button will be used most often.</p>
+            <p><button type="button" class="sbutton btn custombtn btn-danger">CfA: HCO</button>
+                <br/>If you can tell by the authors affiliation that they are a member of the Harvard College Observatory, use this button.</p>
+            <p><button type="button" class="sbutton btn custombtn btn-primary">CfA: SAO</button>
+                <br/>If you can tell by the authors affiliation that they are a member of the Smithsonian Astrophysical Observatory, use this button.</p>
+            <p><button type="button" class="sbutton btn custombtn2 btn-info">CfA: Both HCO & SAO</button>
+                <br/>If the author is the Director of the CfA, or the Head Librarian of Wolbach, or if you can tell by the author's affiliation that they are a member of both the Smithsonian Astrophysical Observatory AND the Harvard College Observatory, use this button.  Note, this button will be used very rarely!!</p>
+            <p><button type="button" class="sbutton btn custombtn2 btn-secondary">Unknown</button>
+                <br/>If you cannot confidently determine if the author is a member of CfA at all (such as being unable to find any affiliation information or being presented with conflicting or confusing affiliation information), use this button.</p>
+            
+            <br/>
+
+            <p><strong>Author Update & Unknown Interface</strong></p>
+            <p>For this interface, you just need to verify if the Status given is correct or not.  The red is userd to highlight records where the script guessed the author was NOT a member of the CfA.
+            <p><button type="button" class="sbutton btn custombtn2 btn-success">Verify Records</button>
+                <br/>If the given Status on the record is correct, select the record and click this button to verify the script guessed correctly.</p>
+            <p><button type="button" class="sbutton btn custombtn2 btn-secondary">Mark as Incorrect</button>
+                <br/>If the Status is incorrect or if you are uncertain, select the record and use this button.  Records marked as incorrect will show up in the "Author Update" interface the next time that page is loaded.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

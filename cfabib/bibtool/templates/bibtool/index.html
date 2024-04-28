@@ -1,0 +1,173 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-home %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+
+{% if state == "register" %}
+
+    <div class="container">
+
+        <br/>
+        <h3>Register a New Account</h3>
+        <br/>
+
+        <div class="row">
+            <div class="col-1">
+                    <img src="{% static 'orders/pinocchio.gif' %}"/>
+                </div>
+            <div class="col-4">
+
+                {% if error != "" %}
+                <div class="alert alert-danger" role="alert">
+                    {{error | safe}}
+                </div>
+                {% endif %}
+
+                <form action="{% url 'registering' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="inputUsername">Username</label>
+                        <input type="username" class="form-control" id="inputUsername" name="inputUsername" placeholder="Enter Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputFirst">First Name</label>
+                        <input type="First" class="form-control" id="inputFirst" name="inputFirst" placeholder="Enter First Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputLast">Last Name</label>
+                        <input type="Last" class="form-control" id="inputLast" name="inputLast" placeholder="Enter Last Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Email</label>
+                        <input type="Email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Enter Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Password</label>
+                        <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password">
+                        <small id="userHelp" class="form-text text-muted">Username and Password are case sensitive.</small>
+                        <small id="userHelp" class="form-text text-muted">All fields required.</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <br/>
+
+            </div>
+        </div>
+    </div>
+
+    {% elif state == "login" %}
+
+
+    <div class="container">
+
+        <br/>
+        <h3>Log In to Your Account</h3>
+        <br/>
+
+        <div class="row">
+            <div class="col-1">
+
+                </div>
+            <div class="col-4">
+
+                {% if error != "" %}
+                <div class="alert alert-danger" role="alert">
+                    {{error | safe}}
+                </div>
+                {% endif %}
+
+                <form action="{% url 'login_view' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="inputUsername">Username</label>
+                        <input type="username" class="form-control" id="inputUsername" name="inputUsername" placeholder="Enter Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Password</label>
+                        <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password">
+                        <small id="userHelp" class="form-text text-muted">Username and Password are case sensitive.</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <br/>
+                <a href="/register">Register</a>
+
+            </div>
+        </div>
+    </div>
+
+    {% elif state == "loggedin" %}
+
+        <div id="home" class="container">
+        
+    <br />
+    <h1>CfA Bibliography</h1>
+
+    <div class="row">
+
+        <div class="col-6">
+
+            <br/>
+            <h3>Hi {{first}}!</h3>
+            <br/>
+            As an Admin, you can evalute new items to add to the bibliography and keep track of bibcode lists sent to ADS.
+            <br/><br/>
+            This website was designed to have two functions:
+            <ol>
+                <li>
+                    to search the bibliogrpahy, and
+                </li>
+                <li>
+                    to evalute new items to add to the bibliography.
+                </li>
+            </ol>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    {% else %}
+
+
+<div id="home" class="container">
+        
+    <br />
+    <h1>CfA Bibliography</h1>
+
+    <div class="row">
+
+        <div class="col-6">
+
+            <br/>
+            <h3>Welcome!</h3>
+            <br/>
+            This website was designed to have two functions:
+            <ol>
+                <li>
+                    to search the bibliogrpahy, and
+                </li>
+                <li>
+                    to evalute new items to add to the bibliography.
+                </li>
+            </ol>
+
+            You do not need to be logged in to search the bibliography. The login feature is only for adding new items to the bibliography and is restricted to Wolbach Library staff.
+
+        </div>
+
+    </div>
+
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-submit %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Evaluate
+{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col"> 
+            <br/>
+            <h2>Manage Your Bibliography</h2>
+            <BR/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6"> 
+            {% if err != "" %}
+            {{err}}
+            <br/><br/>
+            {% endif %}
+
+            <b>Open Batch:</b><br/>
+            {% if openbatch != None %}
+            {{num}} articles in your current open batch<br/><br/>
+            <form action="{% url 'close_batch' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="batchid" value="{{openbatch.id}}">
+                <button type="submit" class="btn btn-primary">Close Batch</button>
+            </form>
+
+            {% else %}
+                You do not have an open batch!<br/><br/>
+                <form action="{% url 'post_openbatch' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Open new batch</button>
+                </form>
+            {% endif %}
+            <br/><br/>            
+            
+                <b>View all Closed Batches:</b><br/>
+                {% if closed %}
+                    {% for batch in closed %}
+                        <a href="/bibmanage/batch/{{batch.id}}">Batch {{batch.id}}</a><br/>
+                    {% endfor %}
+                {% else %}
+                    You have no closed batches yet!
+                {% endif %}
+
+
+        </div>
+
+        <div class="col-6">
+
+
+            <br/>
+
+            {% if openbatch != None %}
+                {% if numnew != 0 %}
+
+                <b>{{numnew}}</b> bibcodes waiting to be added to a batch<br/>
+                <form action="{% url 'post_addtobatch' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <button type="button"  class="btn btn-info" onclick='selectAll()'>Select All</button>
+                        <button type="button" class="btn btn-dark" onclick='UnSelectAll()'>Unselect All</button>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" name="batchid" value="{{openbatch.id}}">
+                        <button type="submit" class="btn btn-primary">Add Bibcodes to Open Batch</button>
+                        <br/><br/>
+                    </div>
+                    
+                    <div class="form-group form-check">
+                        {% for code in newbibs %}
+                            <input type="checkbox" name="newbibcodes" class="form-check-input" value="{{code.id}}" id="{{code.id}}">
+                            <label class="form-check-label" for="{{code.id}}"><a href="https://ui.adsabs.harvard.edu/abs/{{code.bibcode}}/abstract" target="_blank">{{code.bibcode}}</a></label><br/>
+                        {% endfor %}
+                        {% for code in oldbibs %}
+                            <input type="checkbox" name="oldbibcodes" class="form-check-input" value="{{code.id}}" id="{{code.id}}">
+                            <label class="form-check-label" for="{{code.id}}"><a href="https://ui.adsabs.harvard.edu/abs/{{code.bibcode}}/abstract" target="_blank">{{code.bibcode}}</a></label><br/>
+                        {% endfor %}
+                    </div>
+
+                    
+                </form>
+                {% endif %}
+            {% else %}
+
+            <b>{{numnew}}</b> bibcodes waiting to be added to a batch
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function selectAll() {
+        var items = document.getElementsByName('newbibcodes');
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type == 'checkbox')
+                items[i].checked = true;
+        }
+
+        var items = document.getElementsByName('oldbibcodes');
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type == 'checkbox')
+                items[i].checked = true;
+        }
+    }
+
+    function UnSelectAll() {
+        var items = document.getElementsByName('newbibcodes');
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type == 'checkbox')
+                items[i].checked = false;
+        }
+        var items = document.getElementsByName('oldbibcodes');
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type == 'checkbox')
+                items[i].checked = false;
+        }
+    }           
+</script>
+
+
+{% endblock %}

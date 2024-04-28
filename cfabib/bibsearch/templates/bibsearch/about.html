@@ -1,0 +1,43 @@
+{% extends "bibtool/base.html" %}
+
+{% load static %}
+
+{% block nav-about %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+<div class="row flex-xl-nowrap">
+
+<div class="d-none d-xl-block col-xl-2 bd-toc">
+    <br/><br/>
+   
+</div>
+
+
+<main class="col-12 col-md-9 col-xl-7 py-md-3 pl-md-5 bd-content" role="main">
+
+    <br/>
+        <h1>About</h1>
+<br/>This Publication Reports web application is a project from <a href="https://library.cfa.harvard.edu/">Wolbach Library</a>.
+
+<br/><br/>
+<h4>What Does This Site Do?</h4>
+This site was designed to generate publication statistics reports from the CfA Bibliography.  It allows someone to submit a list of names, for example the researchers within a department, to automatically generate publication stats drawn from the CfA Bibliography.  It was developed to help departmental administrators produce standard reports.  There are plans to expand this tool in the future so that anyone who has a managed bibliography in the Astrophysics Data System could use the tool.
+<br><br>
+For more details about how to use this site, see the <a href="/help">Help page</a>.
+
+<br/><br/>
+<h4>Site Developer</h4>
+This web application is developed and maintained by <a href="mailto:kfrey@cfa.harvard.edu">Katie Frey</a>, Assistant Head Librarian of <a href="https://library.cfa.harvard.edu/">Wolbach Library</a> at the <A href="https://www.cfa.harvard.edu/">Center for Astrophysics | Harvard & Smithsonian</A>.
+
+</main>
+
+</div>
+</div>
+
+{% endblock %}

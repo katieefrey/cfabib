@@ -1,0 +1,91 @@
+{% extends "bibtool/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block nav-home %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+
+
+
+    <div class="container">
+
+        <br/>
+        <h3>Manage Your Account</h3>
+        <br/>
+
+        <div class="row">
+            <div class="col-1">        
+            </div>
+            <div class="col-6">
+
+                {% if error != "" %}
+                <div class="alert alert-danger" role="alert">
+                    {{error | safe}}
+                </div>
+                {% endif %}
+
+                <strong>Name:</strong> {{user.first_name}} {{user.last_name}}
+                <br/>
+                <strong>Bibgroup:</strong> {{user.bibgroup}}
+                <br/><br/>
+                <strong>Evaluation History</strong><br/>
+                {% for y in batchlist reversed %}
+                <a href="/account/{{y.day|date:'Y'}}/{{y.day|date:'m'}}/{{y.day|date:'d'}}">{{y.day|date:"F d, Y"}}: {{y.num}}</a>
+                <br/>
+                {% endfor %}
+
+            </div>
+            <div class="col-5">
+
+                <!-- <form action="{% url 'account' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group">
+                            {{ bibform | crispy }}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Bibgroup</button>
+                </form> 
+                <br/><br/> -->
+
+                <form action="{% url 'account' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group">
+                            {{ devform | crispy }}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Token</button>
+                </form>
+                {% if update != "" %}
+                <div class="alert alert-success" role="alert">
+                    {{update | safe}}
+                </div>
+                {% endif %}
+
+                <br/><br/>
+
+                <h5>Change Your Password</h5>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ pwform | crispy }}
+                    <br/> 
+                    <input id="pwchange" name="pwchange" type="hidden" value="pwchange">
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </form>
+
+            </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

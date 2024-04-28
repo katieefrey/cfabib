@@ -1,0 +1,42 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-search %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+<div id="home" class="container">
+
+    <div class="row">
+        <div class="col-12">
+            <h2>Your Search Has Been Added to the Queue</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            Check the <a href="/search/history">Results History</a> in a few minutes to find your report.
+            <br/><br/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+
+            <h4>Current Search Query</h4><br/>
+            <strong>Date Range:</strong> {{daterange}}<br/><br/>
+            <strong>Author List:</strong><br/>
+            {% for a in namelist %}
+                {{a}}<br/>
+            {% endfor %}
+            <br/><br/>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

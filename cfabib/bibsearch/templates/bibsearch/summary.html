@@ -1,0 +1,69 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+{% load tags %}
+
+{% block nav-summaries %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+
+<div id="home" class="container-fluid">
+    <div class="row py-md-3 pl-md-5">
+        <h2>CfA Summary Report {{resultset.id}}</h2>
+        <br>
+    </div>
+    
+
+    <div class="row">
+
+    <div class="col-12 col-md-3 col-xl-2 py-md-3 pl-md-5 bd-sidebar section-nav">
+
+        <h4>Search Query</h4>
+        <strong>Report Created:</strong><br/>
+            {{resultset.created}}
+            <br/><br/>
+            <strong>Date Range:</strong><br/>
+            {{resultset.daterange}}
+            <br/><br/>
+            <strong>Bibgroup:</strong><br/>
+            {{resultset.bibgroup}}
+            <br/><br/>
+    </div>
+        
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
+
+
+
+        <table class="table">
+            <tr>
+                <th>Year</th>
+                <th>Refereed Articles</th>
+                <th>Refereed Citations</th>
+                <th>&nbsp;</th>
+            </tr>
+            {% for x in summaries reversed %}
+                <tr>
+                    <td>{{x.year}}</td>
+                    <td>{{x.refart}}</td>
+                    <td>{{x.refcite}}</td>
+                    <td><a href="https://ui.adsabs.harvard.edu/search/q=%20year%3A{{x.year}}%20%20bibgroup%3A%22{{resultset.bibgroup}}%22%20property%3A%22refereed%22&sort=date%20desc%2C%20bibcode%20desc&p_=0">ADS View</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <form action="/search/export_summary" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="reid" value="{{resultset.id}}">
+            <button type="submit" class="btn btn-primary">Export Statistics</button>
+        </form>
+
+
+    </main>
+
+</div>
+</div>
+
+{% endblock %}

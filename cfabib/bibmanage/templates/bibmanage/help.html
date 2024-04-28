@@ -1,0 +1,79 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-help %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Help Page
+{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col"> 
+            <br/>
+            <h2>Tips for Classifying Bibcodes</h2>
+            <BR/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-7"> 
+
+            <p>In general, any record with an affilation that is clearly listed as part of the <em>Center for Astrophysics | Harvard & Smithsonian</em> or either of the CfA's observatories (meaning the <em>Smithsonian Astrophysical Observatory</em> or the <em>Harvard College Observatory</em>) should be included in the CfA Bibliography.</p>
+            <p>Common variations include (but are not limited to):</p>
+            <ul>
+                <li>Harvard-Smithsonian Center for Astrophysics</li>
+                <li>Center for Astrophysics Harvard &amp;amp; Smithsonian</li>
+                <li>Center for Astrophysics Harvard and Smithsonian</li>
+                <li>HS Center for Astrophysics</li>
+                <li>SAO-Harvard Center for Astrophysics</li>
+            </ul>
+            <br/>
+            <h3>Exclude</h3>
+            <p>In general, these affiliations should be excluded from the CfA Bibliography, unless the affiliation also mentions the CfA specifically:</p>
+            <ul>
+                <li>Department of Physics, Harvard Univeristy</li>
+                <li>Department of Earth and Planetary Science, Harvard University</li>
+                <li>Harvard University
+                    <ul>
+                        <li>Exception: Christopher Stubbs is a member of the CfA, and Dean of Sciences, and often simply uses "Harvard" or "Harvard University" as his affiliation.</li>
+                    </ul>
+                </li>                
+            </ul>
+            <br/>
+            <h3>Include</h3>
+            <p>In general, these affiliations should be included into the CfA Bibliography:</p>
+            <ul>
+                <li>Department of Astronomy, Harvard Univeristy</li>
+                <li>Institute for Theoretical Atomic, Molecular and Optical Physics (ITAMP)</li>
+                <li>Institute for Theory and Computation (ITC)</li>
+                <li>Fred Lawrence Whipple Observatory</li>
+            </ul>
+            <br/>
+            <h3>Watch Out!</h3>
+            <p>In general, these affiliations need to be evaluated carefully.  These groups are collaborations that include the CfA.  Some members of these collaborations are NOT part of the CfA, and therefore not everyone with this affiliation can be included in the CfA bibliography:</p>
+            <ul>
+                <li>Black Hole Initiative</li>
+                <!-- <li>Fred Lawrence Whipple Observatory</li> -->
+            </ul>
+            <br/>
+            <h3>When in Doubt...</h3>
+            <p>If you aren't sure what to pick, than use the "unknown" button.  It is better to use "unknown" than to accidently include a record into the Bibliography that does not belong there.</p>
+            <p>Using the "unknown" button will move the record into a category for checking up on later, or for rechecking the paper to see if clarifying affilation information has been added.</p>
+<!--             {% if err != "" %}
+            {{err}}
+            {% endif %}
+            
+            Select <a href="/bibmanage/add">Criteria for adding entries</a> to the bibliography. (NYI)
+            <br/><br/>
+            <a href="/bibmanage/batch">Export batches</a> -->
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

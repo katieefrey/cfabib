@@ -1,0 +1,77 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-summaries %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+<div id="home" class="container">
+    <div class="row py-md-3 pl-md-5">
+        <h2>Refereed Summaries</h2>
+    </div>
+    
+
+    <div class="row flex-xl-nowrap">
+
+    <main class="col-12" role="main">
+
+            {% if err != "" %}
+            {{err}}
+            {% endif %}
+
+            <form action="{% url 'sumqueue' %}" method="post">
+                {% csrf_token %}
+
+                <strong>Bibgroup:</strong> {{bib}}
+<!--                     <select name="bibgroups" id="bibgroups">
+                        <option value=""></option>
+                        {% for y in bibgroups %}
+                            <option value="{{y.bibgroup}}">{{y.bibgroup}}</option>
+                        {% endfor %}
+                    </select> -->
+
+                <br/><br/>
+                <strong>Publication Date Range:</strong>
+                <BR>
+                <input size=10 name="startdate" placeholder="YYYY"> TO <input size=10 name="enddate" placeholder="YYYY">
+                <BR><BR>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <br/><br/>
+
+            <table border=1>
+
+                <table class="table">
+                    <tr>
+                        <th>Date Created</th>
+                        <th>Date Range</th>
+                        <th>Bibgroup</th>
+                    </tr>
+                    {% for x in allsums %}
+                        {% if x.daterange %}
+                            <tr>
+                                <td><a href="/report/summary/{{x.id}}">{{x.created}}</a></td>
+                                <td>{{x.daterange}}</td>
+                                <td>{{x.bibgroup}}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td>{{x.created}}</td>
+                                <td>(pending)</td>
+                                <td>(pending)</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+
+            <br/><br/>
+    
+
+        </main>
+    </div>
+</div>
+
+{% endblock %}

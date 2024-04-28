@@ -1,0 +1,46 @@
+{% extends "bibtool/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block nav-home %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+
+
+
+    <div class="container">
+
+        <br/>
+        <h3>Manage Your Account</h3>
+        <br/>
+
+        <div class="row">
+            <div class="col-1">        
+            </div>
+            <div class="col-6">
+
+
+
+                <strong>Name:</strong> {{user.first_name}} {{user.last_name}}
+                <br/>
+                <strong>Bibgroup:</strong> {{user.bibgroup}}
+                <br/><br/>
+
+                <strong>{{day}}/{{month}}/{{year}}</strong>
+                <br/>
+                {% for u in bibs %}
+                <a href="/bibcode/{{u}}">{{u}}</a>
+                <br/>
+                {% endfor %}
+
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

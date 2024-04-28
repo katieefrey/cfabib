@@ -1,0 +1,306 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+{% load tags %}
+
+{% block nav-history %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+
+<style>
+
+div.sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 70px;
+    /*border: 3px solid black;*/
+    padding: 0px;
+    background-color: #fff;
+}
+
+  a.anchor {
+    display: block;
+    position: relative;
+    top: -100px;
+    visibility: hidden;
+}
+
+</style>
+
+<div id="home" class="container-fluid">
+    <div class="row py-md-3 pl-md-5">
+        <h2>CfA Bibliography Author Search Report {{resultset.id}}</h2>
+        <br>
+    </div>
+    
+
+    <div class="row">
+
+    <div class="col-12 col-md-3 col-xl-2 py-md-3 pl-md-5 bd-sidebar section-nav">
+        <h4>Search Query</h4>
+        <br>
+        <strong>Report Created:</strong><br/>
+            {{resultset.created}}
+            <br/><br/>
+            <strong>Date Range:</strong><br/>
+            {{resultset.daterange}}
+            <br/><br/>
+            <strong>Bibgroup:</strong><br/>
+            {{resultset.bibgroup}}
+            <br/><br/>
+            <strong>Author List:</strong><br/>
+            {% for a in allauths %}
+                {{a}}<br/>
+            {% endfor %}
+            <br/><br/>
+    </div>
+
+
+        
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
+        <a class="anchor" name="download"></a>
+        <h4>Downnload Tabular Data</h4>
+        <table border="0">
+            <tr>
+                <td>
+
+        <form action="/report/export_author" method="post">
+            {% csrf_token %}
+
+            <input type="hidden" name="reid" value="{{resultset.id}}">
+            <button type="submit" class="btn btn-primary">Export Author Statistics</button>
+        </form>
+    </td>
+    <td>&nbsp;&nbsp;</td>
+    <td>
+        <form action="/report/export_journal" method="post">
+            {% csrf_token %}
+
+            <input type="hidden" name="reid" value="{{resultset.id}}">
+            <button type="submit" class="btn btn-primary">Export Journal Statistics</button>
+        </form>
+</td></tr></table>
+        <br/><br/>
+
+        <h4>Graphs</h4>
+
+        <a class="anchor" name="authorgraph"></a>
+        <div id="authorgraph"></div>
+        <a class="anchor" name="journalgraph"></a>
+        <div id="journalgraph"></div>
+
+       <!--  <table class="table table-borderless">
+            <tr>
+                <td colspan="2"><hr>
+                </td>
+            </tr>
+        {% for x in authors %}
+        
+            <tr>
+                <td><strong><a target="_blank" href="https://ui.adsabs.harvard.edu/search/q=%20author%3A%22{{x.aname}}%22%20%20bibgroup%3A%22{{resultset.bibgroup}}%22%20%20pubdate%3A%5B{{resultset.daterange}}%5D&sort=date%20desc%2C%20bibcode%20desc&p_=0">{{x.aname}} (ADS)</a></strong></td>
+                <td>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td></td>
+                            <th>Articles</th>
+                            <th>First Author</th>
+                            <th>Citations</th>
+                        </tr>
+                        <tr>
+                            <td>Refereed</td>
+                            <td>{{x.vrart}}</td>
+                            <td>{{x.vrfirst}}</td>
+                            <td>{{x.vrcite}}</td>
+                        </tr>
+                        <tr>
+                            <td>Non Refereed</td>
+                            <td>{{x.vnrart}}</td>
+                            <td>{{x.vnrfirst}}</td>
+                            <td>{{x.vnrcite}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td>{{ x.vrart|add:x.vnrart }}</td>
+                            <td>{{ x.vrfirst|add:x.vnrfirst }}</td>
+                            <td>{{ x.vrcite|add:x.vnrcite }}</td>
+                        </tr>
+                    </table>
+            </tr>
+            <tr>
+                <td colspan="2"><hr>
+                </td>
+            </tr>
+        
+        {% endfor %}
+        </table>
+
+        <br/><br/> -->
+
+
+        <a class="anchor" name="table"></a>
+        <table class="table">
+            <tr>
+                <th>Author Name</th>
+                <th>Total Articles</th>
+                <th>Total Verified Articles</th>
+                <th>Total Verified Citations</th>
+                <th>Verified Refereed Articles</th>
+                <th>Verified Non Refereed Articles</th>
+            </tr>
+            {% for x in authors reversed %}
+                <tr>
+                    <td>{{x.aname}} (<a target="_blank" href="https://ui.adsabs.harvard.edu/search/q=%20author%3A%22{{x.aname}}%22%20%20bibgroup%3A%22{{resultset.bibgroup}}%22%20%20pubdate%3A%5B{{resultset.daterange}}%5D&sort=date%20desc%2C%20bibcode%20desc&p_=0">ADS</a>)</td>
+                    <td>{{ x.vrart|add:x.vnrart|add:x.urart|add:x.unrart }}</td>
+                    <td>{{ x.vrart|add:x.vnrart }}</td>
+                    <td>{{ x.vrcite|add:x.vnrcite }}</td>
+                    <td>{{x.vrart}}</td>
+                    <td>{{x.vnrart}}</td>
+                </tr>
+        {% endfor %}
+        </table>
+
+    </main>
+
+    <div class="col-12 col-md-3 col-xl-2 py-md-3">
+        <div class="sidebar">
+            <h4>Navigate Page</h4>
+            <br>
+            <ul>
+                <li><a href="#download">Download Data</a></li>
+                <li>Graphs:<ul>
+                    <li><a href="#authorgraph"># articles/Author</a></li>
+                    <li><a href="#journalgraph"># articles/Journal</a></li>
+                </ul>
+                </li>
+                <li><a href="#table">View Tabular Data</a></li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+var trace1 = {
+  x: [{% for x in authors %}{{x.vrfirst}},{% endfor %}],
+  y: [{% for x in authors %}'{{x.aname}}',{% endfor %}],
+  name: 'First Author, Refereed',
+  orientation: 'h',
+  type: 'bar',
+  marker: {
+    color: 'rgba(55,128,191,1)',
+    width: 1
+  }
+};
+
+var trace2 = {
+  x: [{% for x in authors %}{{x.vrart|subtract:x.vrfirst}},{% endfor %}],
+  y: [{% for x in authors %}'{{x.aname}}',{% endfor %}],
+  name: 'Refereed',
+  orientation: 'h',
+  marker: {
+    color: 'rgba(55,128,191,0.6)',
+    width: 1
+  },
+  type: 'bar'
+};
+
+var trace3 = {
+  x: [{% for x in authors %}{{x.vnrfirst}},{% endfor %}],
+  y: [{% for x in authors %}'{{x.aname}}',{% endfor %}],
+  name: 'First Author, Not Refereed',
+  orientation: 'h',
+  type: 'bar',
+  marker: {
+    color: 'rgba(255,153,51,1)',
+    width: 1
+  }
+};
+
+var trace4 = {
+  x: [{% for x in authors %}{{x.vnrart|subtract:x.vnrfirst}},{% endfor %}],
+  y: [{% for x in authors %}'{{x.aname}}',{% endfor %}],
+  name: 'Not Refereed',
+  orientation: 'h',
+  type: 'bar',
+  marker: {
+    color: 'rgba(255,153,51,0.6)',
+    width: 1
+  }
+};
+
+var data = [trace1, trace2, trace3, trace4];
+
+
+
+var layout = {
+  title: 'Number of Verified Publications by Author',
+  barmode: 'stack',
+  autosize: false,
+  width: 800,
+  height: {{authnum}},
+  margin: {
+    l: 200,
+    r: 50,
+    b: 100,
+    t: 100,
+    pad: 4
+    }
+};
+
+var config = {
+  toImageButtonOptions: {
+    format: 'png', // one of png, svg, jpeg, webp
+    filename: 'Articles_per_Author_report{{resultset.id}}_{{resultset.created}}',
+    //height: 500,
+    //width: 700,
+    //scale: 1 // Multiply title/legend/axis/canvas sizes by this factor
+  }
+};
+
+
+Plotly.newPlot('authorgraph', data, layout, config);
+</script>
+
+<script>
+var jdata = [{
+  type: 'bar',
+  x: [{% for y in journals %}{{y.articlenum}},{% endfor %}],
+  y: [{% for y in journals %}'{{y.jname}}',{% endfor %}],
+  orientation: 'h'
+}];
+
+var jlayout = {
+  title: 'Number of Publications by Journal',
+  barmode: 'stack',
+  autosize: false,
+  width: 900,
+  height: {{jnum}},
+  margin: {
+    l: 500,
+    r: 50,
+    b: 100,
+    t: 100,
+    pad: 4
+    }
+};
+
+var jconfig = {
+  toImageButtonOptions: {
+    format: 'png', // one of png, svg, jpeg, webp
+    filename: 'Articles_per_Journal_report{{resultset.id}}_{{resultset.created}}',
+    //height: 500,
+    //width: 700,
+    //scale: 1 // Multiply title/legend/axis/canvas sizes by this factor
+  }
+};
+
+Plotly.newPlot('journalgraph', jdata, jlayout, jconfig);
+</script>
+
+
+
+{% endblock %}

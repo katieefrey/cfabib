@@ -1,0 +1,59 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-history %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+<div id="home" class="container">
+    <div class="row py-md-3 pl-md-5">
+        <h2>Report History</h2>
+    </div>
+    
+
+    <div class="row flex-xl-nowrap">
+
+    <main class="col-12" role="main">
+
+            <table border=1>
+
+                <table class="table">
+                    <tr>
+                        <th>Date Created</th>
+                        <th>Number of Journals</th>
+                        <th>Number of Authors</th>
+                        <th>Date Range</th>
+                        <th>Bibgroup</th>
+                    </tr>
+                    {% for x in allsets %}
+                        {% if x.daterange %}
+                            <tr>
+                                <td><a href="/report/{{x.id}}">{{x.created}}</a></td>
+                                <td>{{x.jnum}}</td>
+                                <td>{{x.anum}}</td>
+                                <td>{{x.daterange}}</td>
+                                <td>{{x.bibgroup}}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td>{{x.created}}</td>
+                                <td>(pending)</td>
+                                <td>(pending)</td>
+                                <td>(pending)</td>
+                                <td>(pending)</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+
+            <br/><br/>
+    
+
+        </main>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-submit %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Evaluate
+{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col"> 
+            <br/>
+            <h2>Manage Your Bibliography</h2>
+            <BR/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6"> 
+
+            {% if err != "" %}
+            {{err}}
+            <br/><br/>
+            {% endif %}
+
+            <b>Open Batch:</b><br/>
+            {% if openbatch != None %}
+            {{num}} articles in your current open batch<br/><br/>
+            <button type="button" class="btn btn-primary">Export & Close Batch</button>
+
+            {% else %}
+                You do not have an open batch!<br/><br/>
+                <button type="button" class="btn btn-success">Open new batch</button>
+            {% endif %}
+            <br/><br/><br/>
+            
+            
+                <b>View all Closed Batches:</b><br/>
+                {% if closed %}
+                    {% for batch in closed %}
+                        <a href="/bibmanage/batch/{{batch.id}}">Batch {{batch.id}}</a><br/>
+                    {% endfor %}
+                {% else %}
+                    You have no closed batches yet!
+                {% endif %}
+
+
+        </div>
+
+        <div class="col-6">
+            {% if openbatch != None %}
+                {% if numnew != 0 %}
+
+                <b>{{numnew}}</b> bibcodes waiting to be added to a batch<br/>
+                <form>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="selectall">
+                        <label class="form-check-label" for="selectall">Select All {{numnew}}</label>
+                    </div>
+                    
+                        <button type="submit" class="btn btn-primary">Add Bibcodes to Open Batch</button>
+                        <br/><br/>
+                    
+                    <div class="form-group form-check">
+                        {% for code in newbibs %}
+                            <input type="checkbox" class="form-check-input" id="{{code.id}}">
+                            <label class="form-check-label" for="{{code.id}}"><a href="https://ui.adsabs.harvard.edu/abs/{{code.bibcode}}/abstract" target="_blank">{{code.bibcode}}</a></label><br/>
+                        {% endfor %}
+                    </div>
+                </form>
+                {% endif %}
+            {% else %}
+
+            <b>{{numnew}}</b> bibcodes waiting to be added to a batch
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

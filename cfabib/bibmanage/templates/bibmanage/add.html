@@ -1,0 +1,209 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-submit %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Evaluate
+{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col"> 
+            <br/>
+            <h2>Manage Your Bibliography</h2>
+            <BR/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4"> 
+
+            {% if err != "" %}
+            {{err}}
+            {% endif %}
+            
+
+                <strong>Bibgroup:</strong> {{bibgroup}}
+                <br/><br/>
+
+                <strong>Criteria Set:</strong> 
+                    <select id="criteriaset">
+                        <option value=""></option>
+                        {% for y in criteria %}
+                            <option value="{{y.id}}">{{y.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <br/>
+                    <br/>
+                    Date Range:
+                    <BR>
+                    <input size=10 id="startdate" name="startdate" placeholder="YYYY-MM"> TO <input size=10 id="enddate" name="enddate" placeholder="YYYY-MM">
+                    <BR><BR>
+
+                    <button type="button" id="search" class="btn btn-primary">Search</button>
+                    <br/><br/>
+                    <button type="button" id="new" class="btn btn-success">New</button>
+                    <button type="button" id="edit" class="btn btn-secondary">Edit</button>
+                    <button type="button" id="copy" class="btn btn-info">Copy</button>
+                    <button type="button" id="delete" class="btn btn-danger">Delete</button>
+
+                <script>
+
+                    function getCookie(c_name)
+                        {
+                            if (document.cookie.length > 0)
+                            {
+                                c_start = document.cookie.indexOf(c_name + "=");
+                                if (c_start != -1)
+                                {
+                                    c_start = c_start + c_name.length + 1;
+                                    c_end = document.cookie.indexOf(";", c_start);
+                                    if (c_end == -1) c_end = document.cookie.length;
+                                    return unescape(document.cookie.substring(c_start,c_end));
+                                }
+                            }
+                            return "";
+                         }
+
+
+                    //check if the user is sure they want to delete the critera, then delete it
+                    $("#delete").click(function(){
+                        var criteria = $("#criteriaset");
+                        var optiontxt = $( "#criteriaset option:selected" ).text();
+                        var check = confirm("Are you sure you want to delete this criteria set?\n\n"+optiontxt);
+                        if (check == false){
+                            //do nothing
+                        //otherwise... delete it!!
+                        } else {
+                        
+                            $.ajaxSetup({
+                                headers: { "X-CSRFToken": getCookie("csrftoken") }
+                            });
+
+                            $.ajax(
+                            {
+                                type:"POST",
+                                url: "delete_post",
+                                data: {
+                                    criteriaid: criteria.val(),
+                                    },
+                                success: function( data ) 
+                                    {
+                                    console.log("success, it's deleted!");
+                                    alert("Criteria set "+optiontxt+" has been deleted.");
+
+                                    for (var k = 0; k < (data["critlist"]).length; k++){
+                                        console.log(data["critlist"][k]);
+
+                                        $("#criteriaset").empty();
+                                        options = $("<option></option>").attr("id",data["critlist"][k]["id"])
+                                        .attr("name",data["critlist"][k]["name"])
+                                        .attr("text",data["critlist"][k]["name"])
+                                        .text(data["critlist"][k]["name"])
+                                        $("#criteriaset").append(options);
+
+                                        }
+                                    },
+                                error: function(xmlhttprequest, textstatus, message) {
+                                    if(textstatus==="timeout") {
+                                        alert("got timeout");
+                                    } else {
+                                        alert(textstatus);
+                                    }
+                                }
+                             })
+                        }
+
+                    });
+
+                    $("#search").click(function(){
+                        var criteriaid = $("#criteriaset").val();
+                        var startdate = $("#startdate").val()
+                        var enddate = $("#enddate").val()
+
+                        $.ajaxSetup({
+                            headers: { "X-CSRFToken": getCookie("csrftoken") }
+                        });
+
+                        $.ajax(
+                        {
+                            type:"POST",
+                            url: "add_post",
+                            data: {
+                                    criteriaid: criteriaid,
+                                    startdate: startdate,
+                                    enddate: enddate
+
+                            },
+                            success: function( data ) 
+                            {
+                                console.log("success!");
+                            },
+                            error: function(xmlhttprequest, textstatus, message) {
+                                if(textstatus==="timeout") {
+                                    alert("got timeout");
+                                } else {
+                                    alert(textstatus);
+                                }
+                            }
+                         })
+
+                    });
+
+
+                    $("#criteriaset").change(function(){
+                        var criteriaid = $(this).val();//.value;
+
+                        $.ajaxSetup({
+                            headers: { "X-CSRFToken": getCookie("csrftoken") }
+                        });
+
+                        $.ajax(
+                        {
+                            type:"POST",
+                            url: "select_criteria",
+                            data: {
+                                    criteriaid: criteriaid
+                            },
+                            success: function( data ) 
+                            {
+                                $("#instlist").val(data["instlist"]);
+                                $("#authorlist").val(data["authorlist"]);
+                                $("#exclstem").val(data["exclstem"]);
+                                $("#exclvol").val(data["exclvol"]);
+                                $("#inclstem").val(data["inclstem"]);
+                                $("#inclvol").val(data["inclvol"]);
+                            }
+                         })
+
+
+                    });
+
+                </script>
+            </div>
+
+            <div class="col-8">
+            
+                <strong>Search Criteria:</strong><br/><br/>
+                Institution Search Keywords:<br/>
+                <textarea cols="50" name="instlist" id="instlist" readonly>{{criteria.instlist}}</textarea><br/>
+                Author Search List:<br/>
+                <textarea cols="50" name="authorlist" id="authorlist" readonly>{{criteria.authorlist}}</textarea><br/>
+                Excluded Bibstems:<br/>
+                <textarea cols="50" name="exclstem" id="exclstem" readonly>{{criteria.exclstem}}</textarea><br/>
+                Excluded Volumes:<br/>
+                <textarea cols="50" name="exclvol" id="exclvol" readonly>{{criteria.exclvol}}</textarea><br/>
+                Included Bibstems:<br/>
+                <textarea cols="50" name="inclstem" id="inclstem" readonly>{{criteria.inclstem}}</textarea><br/>
+                Included Volumes:<br/>
+                <textarea cols="50" name="inclvol" id="inclvol" readonly>{{criteria.inclvol}}</textarea><br/>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

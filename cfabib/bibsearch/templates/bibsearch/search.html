@@ -1,0 +1,62 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-search %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Search
+{% endblock %}
+
+{% block body %}
+<div id="home" class="container">
+        
+    <br />
+
+    <div class="row">
+
+        <div class="col-12">
+            <h2>Generate CfA Publications Report</h2>
+            <BR>
+
+            {% if err != "" %}
+            {{err}}
+            {% endif %}
+
+
+
+            <form action="{% url 'queued' %}" method="post">
+                {% csrf_token %}
+
+                <strong>Bibgroup:</strong> {{bib}}
+<!--                     <select name="bibgroups" id="bibgroups">
+                        <option value=""></option>
+                        {% for y in bibgroups %}
+                            <option value="{{y.bibgroup}}">{{y.bibgroup}}</option>
+                        {% endfor %}
+                    </select> -->
+
+                <br/><br/>
+                <strong>Author List</strong> (one per line)
+                <BR>
+                <textarea placeholder="Lastname, Firstname" rows=10 cols=30 name="authorlist"></textarea>
+                <br><BR>
+                <strong>Publication Date Range:</strong>
+                <BR>
+                <input size=18 name="startdate" placeholder="YYYY-MM or YYYY"> TO <input size=18 name="enddate" placeholder="YYYY-MM or YYYY">
+                <BR><BR>
+                <!--<input type="radio" name="property" value="refereed"> Refereed Only<br>
+                <input type="radio" name="property" value="nonrefereed"> Nonrefereed Only<br>
+                <input type="radio" name="property" value="both" checked="checked"> Refereed and Nonrefereed Combined<br>
+                <input type="radio" name="property" value="seperate"> Refereed and Nonrefereed Seperated-->
+                <BR><BR>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,232 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-eval %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Evaluate
+{% endblock %}
+
+{% block body %}
+
+
+<br/>
+<br/>
+
+<!-- start of container for chart and blerb-->
+<div class="container">
+
+    <div class="row">
+        <div class="col"> 
+            <div class="media-body">
+                <br/>
+                <br/>
+                <br/>
+                <h3 class="mt-0">Progress Report</h3>
+                <br/>
+                <p>The number of records that have been verified: {{numod}}</p>
+                <p class="mb-0">The number of records that still need to be checked: {{numnot}}</p>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="media-right">
+                <div id="myDiv" class="media-object"></div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- end of container for chart and blerb-->
+
+<br/>
+
+<!-- start of container for both accordians-->
+<div class="container-fluid">
+
+    <div id="accordion">
+        <div class="card">
+            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="color: #ffffff">
+                <div class="card-header" id="headingTwo" style="background-color: #283266">
+                    <h5 class="mb-0">View Not Modified Records</h5>
+                </div>
+            </button>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      
+                <div class="card-body">
+
+                    <form method="post" id="updatestuff" action="/update">
+                        {% csrf_token %}
+
+                    <div class="d-none d-xl-block bd-toc">
+                        <br>
+
+                        <div class="form-inline">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label">CfA Bibliography?</label>
+                                <select name="cfastatus" class="form-control">                                
+                                    <option> </option>
+                                    <option value="5">NOT CfA</option>
+                                    <option value="4">CfA: either HCO or SAO</option>
+                                    <option value="1">CfA: HCO</option>
+                                    <option value="2">CfA: SAO</option>
+                                    <option value="3">CfA: both HCO & SAO</option>                                    
+                                </select>
+                            </div>
+                        </div>
+
+                        <input type="submit" value="Submit">
+
+                    </div>
+                    
+
+                        
+
+
+                        <table class="sortable" id="bibliography">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th width=10px>Bibcode</th>
+                                    <th width=10px>Guess</th>
+                                    <th width=10px>Query</th>
+                                    <th>Affilations</th>
+                                    <th width=10px>Auths</th>
+                                    <th width=10px>Groups</th>
+                                    <!--<th width=10px>CfA?</th>
+                                    <th width=10px>Institution</th>-->
+                                </tr>
+                            </thead>
+
+                            {% for x in want %}
+                                {% if x.created|date:'Y-m-d H:i:s' == x.modified|date:'Y-m-d H:i:s' %}
+                                    <tr class="clicky">
+                                        <td><input type="checkbox" name="bibcode" value="{{x.id}}"></td>
+                                        <td><div class="cont" style="overflow: hidden;width: 75px;-o-text-overflow: ellipsis;text-overflow: ellipsis;white-space: nowrap;">{{x.bibcode}}</div></td>
+                                        <td>{{x.guess}}</td>
+                                        <td>{{x.query}}</td>
+                                        <td>{{x.affils}}</td>
+                                        <td>{{x.authnum}}</td>
+                                        <td>{{x.bibgroups}}</td> 
+                                        
+                                        <!-- <td><select class="form-control">
+                                            <option>Guess: {{x.status}}</option>
+                                            <option>yes</option>
+                                            <option>no</option>
+                                            <option>maybe</option>
+                                            <option>doubtful</option>
+                                            </select>
+                                        </td>
+                                        <td><select class="form-control">
+                                            <option>Guess: {{x.inst}}</option>
+                                            <option>HCO</option>
+                                            <option>SAO</option>
+                                            <option>both</option>
+                                            <option>unknown</option>
+                                            <option>neither</option>
+                                            </select>
+                                        </td>-->
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </table>
+
+                    </form>
+                    <br/>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- accordian modified records starts-->
+    <div id="accordion">
+        <div class="card">
+            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="color: #ffffff">
+                <div class="card-header" id="headingTwo" style="background-color: #666699">
+                    <h5 class="mb-0">View Modified Records</h5>
+                </div>
+            </button>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+
+                    <table id="bibliography">
+
+                        <tr>
+                            <th>Bibcode</th>
+                            <th>Date Created</th>
+                            <th>Status</th>
+                        </tr>
+
+                        {% for x in want %}
+
+                            {% if x.created|date:'Y-m-d H:i:s' != x.modified|date:'Y-m-d H:i:s' %}
+
+                                <tr>
+                                    <td>{{x.bibcode}}</td>
+                                    <td>{{x.created}}</td> 
+                                    <td> Modified: {{x.modified}}</td>
+                                </tr>
+
+
+                            {% endif %}
+                        {% endfor %}    
+
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- end of container for accordians-->
+
+<script>
+
+$(document).ready(function() {
+  $('#bibliography tr').click(function(event) {
+    if (event.target.type !== 'checkbox') {
+      $(':checkbox', this).trigger('click');
+    }
+  });
+});
+
+
+/*$('#updatestuff').submit(function() {
+/    $.each($("input[type='checkbox']:checked"), function(){            
+
+            console.log($(this));
+            $(this)[0].value = "true";
+            console.log($(this));
+
+            });
+    //$("#updatestuff").submit(); 
+    return false; // return false to cancel form action
+});
+*/
+
+
+//graph
+var data = [{
+  values: [{{numod}}, {{numnot}}],
+  labels: ['Modified', 'Not Modified'],
+  
+  type: 'pie'
+}];
+
+var layout = {
+  height: 400,
+  width: 500,
+
+};
+
+Plotly.newPlot('myDiv', data, layout);
+</script>
+
+{% endblock %}

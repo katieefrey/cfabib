@@ -1,0 +1,51 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-submit %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Evaluate
+{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col"> 
+            <br/>
+            <h2>Manage Your Bibliography</h2>
+            <BR/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6"> 
+
+            {% if err != "" %}
+            {{err}}
+            {% endif %}
+            
+            Select <a href="/bibmanage/add">Criteria for adding entries</a> to the bibliography. (NYI)
+            <br/><br/>
+            <a href="/bibmanage/export">Export batches</a>
+            <br/><br/>
+            All Batches: <br/>
+            {% for batch in batches %}
+            <a href="/bibmanage/batch/{{batch.id}}">Batch {{batch.id}}</a><br/>
+            {% endfor %}
+
+
+        </div>
+
+        <div class="col-6">
+            Bibcodes with no batches:<BR/>
+            {% for code in newbibs %}
+            {{code.bibcode}}<br/>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

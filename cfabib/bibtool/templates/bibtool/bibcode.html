@@ -1,0 +1,230 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-eval %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Evaluate
+{% endblock %}
+
+{% block body %}
+
+
+<br/>
+<br/>
+
+<!-- start of container for chart and blerb-->
+<!-- <div class="container">
+
+    <div class="row">
+        <div class="col-12">
+            <p>These records need to be checked by a human because the automatic classifer wasn't sure what to do with them.  Please select the records and choose the apporpirate classification.  Use "unknown" if you cannot determine the classification.</p>
+        </div>
+    </div>
+</div> -->
+<!-- end of container for chart and blerb-->
+
+<br/>
+
+<div class="container-fluid">
+
+    <div class="card">
+        <div class="card-header" id="headingTwo" style="background-color: #283266;text-align: center;">
+            <h5 class="mb-0" style="color: #ffffff">Individual Record</h5>
+        </div>
+    </div>
+        
+
+        <div class="row records">
+            <div class="col-3">
+                <div style="display: block;" id="buttonloc_{{bib.id}}">
+                    <button type="button" data-cfainst="6" data-artid="{{bib.id}}" data-value="CfA" class="sbutton btn custombtn btn-success">CfA</button>&nbsp;&nbsp;&nbsp;
+                    <button type="button" data-cfainst="5" data-artid="{{bib.id}}" data-value="Not CfA" class="sbutton btn custombtn btn-warning">Not CfA</button>
+                    <br/> <br/>
+                    <button type="button" data-cfainst="1" data-artid="{{bib.id}}" data-value="CfA: HCO" class="sbutton btn custombtn btn-danger">CfA: HCO</button>&nbsp;&nbsp;&nbsp;
+                    <button type="button" data-cfainst="2" data-artid="{{bib.id}}" data-value="CfA: SAO" class="sbutton btn custombtn btn-primary">CfA: SAO</button>
+                    <br/> <br/>
+                    <button type="button" data-cfainst="3" data-artid="{{bib.id}}" data-value="CfA: Both HCO & SAO" class="sbutton btn custombtn2 btn-info">CfA: Both HCO & SAO</button>
+                    <br/> <br/>
+                    <button type="button" data-cfainst="4" data-artid="{{bib.id}}" data-value="unknown" class="sbutton btn custombtn2 btn-secondary">Unknown</button>
+                </div>
+                        <div style="display: none;" id="editloc_{{bib.id}}">
+                            <button type="button" data-id="{{bib.id}}" class="ebutton btn custombtn2 btn-secondary">Edit</button>
+                        </div>
+                    </div>
+            <div class="col-9">
+                <span style="padding-bottom: 1rem"><a href="https://ui.adsabs.harvard.edu/abs/{{bib.bibcode}}/abstract" target="_blank">{{bib.bibcode}}</a> {{bib.title}}</span>
+                
+                <table id="bibliography" width="100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th width="75px">Status</th>
+                            <th width="175px">Name</th>
+                            <th>Affilation</th>
+                            <th>Guess</th>
+                            <th>Query</th>
+                            
+                        </tr>
+                    </thead>
+                    
+                    {% for x in bib_list %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" id="cb_{{x.id}}" name="auth-{{bib.id}}" value="{{x.name}}">
+                            </td>
+                            <td class="{{x.inst|cut:' '}}">
+                                <span id="span_{{x.id}}">
+                                    {{x.inst}}
+                                </span>
+                            </td>
+                            <td>
+                                <label for="cb_{{x.id}}">{{x.name}}</label>
+                            </td>
+                            <td>
+                                {{x.affil}}
+                            </td>
+                            <td {% if x.guess.id != 1 %}style="background-color:red" {% endif %}>
+                                {{x.guess}}
+                            </td>
+                            <td>
+                                {{x.query}}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="6  ">
+                            <input type="checkbox" class="checkall" name="list-{{bib.id}}" id="list-{{bib.id}}" value="{{bib.bibcode}}"> <label for="list-{{bib.id}}"><strong>Check all for {{bib.bibcode}}</strong></label>
+                        </td>
+                        
+                    </tr>
+                </table>
+
+            </div>
+        </div>                    
+</div>
+
+
+<!-- end of container for accordians-->
+
+<script>
+
+$(document).ready(function() {
+  $('#bibliography tr').click(function(event) {
+    if (event.target.type !== 'checkbox') {
+      $(':checkbox', this).trigger('click');
+    }
+  });
+
+
+});
+
+
+// //graph
+// var data = [{
+//   values: [{{numod}}, {{numnot}}],
+//   labels: ['Checked', 'Unchecked'],
+  
+//   type: 'pie'
+// }];
+
+// var layout = {
+//   height: 400,
+//   width: 500,
+
+// };
+
+// Plotly.newPlot('myDiv', data, layout);
+
+
+
+function getCookie(c_name)
+{
+    if (document.cookie.length > 0)
+    {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1)
+        {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+ }
+
+$('.ebutton').click(function(){
+    var id = $(this).attr("data-id");
+    $("#buttonloc_"+id).show();
+    $("#editloc_"+id).hide();
+
+});
+
+$('.cbutton').click(function(){
+    var id = $(this).attr("data-id");
+    $("#buttonloc_"+id).hide();
+    $("#editloc_"+id).show();
+
+});
+
+$('.sbutton').click(function(){
+    var cfainst = $(this).attr("data-cfainst");
+    var artid = $(this).attr("data-artid");
+    auths = []
+    $('input[name="auth-'+artid+'"]').each(function(){
+        if(this.checked) {
+            var num = $(this).attr("id");
+            auths.push(num.replace("cb_",""));
+        }
+    });
+
+    if (auths.length != 0) {
+        
+        var span_value = $(this).attr("data-value");
+
+        $.ajaxSetup({
+            headers: { "X-CSRFToken": getCookie("csrftoken") }
+        });
+
+        $.ajax(
+        {
+            type:"POST",
+            url: "/post_nameupdate",
+            data:{
+                    cfainst: cfainst,
+                    authid: auths, // sending list of authors to server
+                    art: artid,
+            },
+            success: function( data ) 
+            {
+                $("#buttonloc_"+artid).hide();
+                $("#editloc_"+artid).show();
+                for (i=0;i<auths.length;i++){
+                    console.log(auths[i]);
+                    $('input#cb_'+auths[i]).prop("checked", false);
+                    $("#span_"+auths[i]).text(span_value);
+                }
+            }
+         })
+    }
+});
+
+$(".checkall").click(function(event) {
+    var thing = ($(this).attr("name")).replace("list-","");
+    if(this.checked) {
+        $('input[name="auth-'+thing+'"]').each(function(){
+            this.checked = true;
+        });
+    } else {
+        $('input[name="auth-'+thing+'"]').each(function(){
+            this.checked = false;                       
+        });
+    }
+});
+
+
+</script>
+
+
+{% endblock %}

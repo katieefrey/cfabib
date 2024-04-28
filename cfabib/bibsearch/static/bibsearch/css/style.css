@@ -1,0 +1,126 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+     margin: 0;
+     font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+
+.section-nav {
+    /*padding-left: 0;*/
+    border-right: 1px solid #eee;
+}
+
+.bd-toc {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 3rem;
+    overflow-y: auto;
+    background-color: white;
+}
+
+.custombtn {
+    width: 100px !important;
+}
+
+.custombtn2 {
+    width: 219px !important;
+}
+
+thead.massupdate th {
+    position: sticky;
+    top: 8em; }
+
+thead.update th  {
+    position: sticky;
+    top: 4em; }
+
+#bibliography {
+     font-family: Helvetica, Arial, Helvetica, sans-serif; 
+     border-collapse: collapse;
+     margin-left: auto;
+     margin-right: auto;
+     margin-bottom: auto;
+     width: 100%;
+}
+
+
+#bibliography td, #bibliography th {
+     border: 1px solid #ddd;
+     padding: 8px;
+}
+}
+
+#bibliography tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+#bibliography tr:hover {
+    background-color: #ddd;
+}
+
+#bibliography th {
+     padding-top: 12px;
+     padding-bottom: 12px;
+     text-align: center;
+     background-color: #283266;
+    /* For browsers that do not support gradients */
+     background-image: linear-gradient(to right, #8d0034, #283266);
+    /* Standard syntax (must be last) */
+     background-attachment:fixed;
+     color: white;
+}
+
+/*
+link stuff
+*/
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  text-decoration: underline;
+}
+
+
+.navbar {
+    background-color: #283266;
+    background-image: linear-gradient(to right, #8d0034 , #283266);
+    }
+
+.navbar-nav .active > .nav-link, .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show > .nav-link {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.nav-link {
+    color: #ffffff;
+}
+
+.nav-link:hover {
+    color: lightgrey;
+}
+
+
+.navbar-brand {
+    color: #ffffff;
+}
+
+
+/* for the submit button*/
+
+ 

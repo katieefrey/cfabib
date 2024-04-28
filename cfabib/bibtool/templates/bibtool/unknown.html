@@ -1,0 +1,187 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-eval %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography: Evaluate
+{% endblock %}
+
+{% block body %}
+
+
+<br/>
+
+<br/>
+
+
+<!-- start of container for chart and blerb-->
+<div class="container">
+
+    <div class="row">
+        <div class="col"> 
+            <div class="media-body">
+                <br/>
+                <br/>
+                <br/>
+                <h3 class="mt-0">Progress Report</h3>
+                <br/>
+                <p>The number of records that have been verified: {{numknown}}</p>
+                <p class="mb-0">The number of records that still need to be checked: {{numunknown}}</p>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="media-right">
+                <div id="myDiv" class="media-object"></div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- end of container for chart and blerb-->
+
+
+<!-- start of container for both accordians-->
+<div class="container-fluid">
+
+
+
+                    
+
+                    <div class="d-none d-xl-block bd-toc">
+                        <br>
+                    </div>
+
+                    <table class="sortable" id="bibliography">
+                        <thead class="update">
+                            <tr>
+                                <th width=230px>CfA Bibliograpy?</th>
+                                <th width=10px>Bibcode</th>
+                                <th width=10px>Guess</th>
+                                <th width=10px>Query</th>
+                                <th>Affilations</th>
+                                <th width=10px>Auths</th>
+                                
+                            </tr>
+                        </thead>
+
+                        {% for x in articles %}
+                            
+                                <tr>
+                                    <td>
+                                        <div id="buttonloc_{{x.id}}">
+                                            <button type="button" data-cfastatus="6" data-bibcode="{{x.id}}" data-value="CfA" class="sbutton btn custombtn btn-success">CfA</button>&nbsp;&nbsp;&nbsp;
+                                            <button type="button" data-cfastatus="5" data-bibcode="{{x.id}}" data-value="Not CfA" class="sbutton btn custombtn btn-warning">Not CfA</button>
+                                            <br/> <br/>
+                                            <button type="button" data-cfastatus="1" data-bibcode="{{x.id}}" data-value="CfA: HCO" class="sbutton btn custombtn btn-danger">CfA: HCO</button>&nbsp;&nbsp;&nbsp;
+                                            <button type="button" data-cfastatus="2" data-bibcode="{{x.id}}" data-value="CfA: SAO" class="sbutton btn custombtn btn-primary">CfA: SAO</button>
+                                            <br/> <br/>
+                                            <button type="button" data-cfastatus="3" data-bibcode="{{x.id}}" data-value="CfA: Both HCO & SAO" class="sbutton btn custombtn2 btn-info">CfA: Both HCO & SAO</button>
+                                            <br/> <br/>
+                                            <button type="button" data-cfastatus="4" data-bibcode="{{x.id}}" data-value="unknown" class="sbutton btn custombtn2 btn-secondary">Unknown</button>
+                                        </div>
+                                        <div style="display: none;" id="editloc_{{x.id}}">
+                                            <span id="cfa_status_{{x.id}}"></span>
+                                            <button type="button" data-id="{{x.id}}" class="ebutton btn custombtn2 btn-secondary">Edit</button>
+                                        </div>
+                                    </td>
+                                    <td><a href="https://ui.adsabs.harvard.edu/abs/{{x.bibcode}}/abstract" target="_blank">{{x.bibcode|truncatechars:10}}</a><br/>{{x.title|truncatechars:10}}</td>
+                                    <td>{{x.guess}}</td>
+                                    <td>{{x.query}}</td>
+                                    <td>{{x.affils|truncatechars:1990 }}{% if x.affils|length > 1990 %} <strong>(truncated)</strong>{% endif %}</td>
+                                    <td>{{x.authnum}}</td> 
+                                    
+                                </tr>
+
+                        {% endfor %}
+                    </table>
+
+                    
+                    <br/>
+
+
+
+
+</div>
+
+<!-- end of container for accordians-->
+
+<script>
+
+
+
+//graph
+var data = [{
+  values: [{{numknown}}, {{numunknown}}],
+  labels: ['Verified', 'Unknown'],
+  
+  type: 'pie'
+}];
+
+var layout = {
+  height: 400,
+  width: 500,
+
+};
+
+Plotly.newPlot('myDiv', data, layout);
+
+
+
+function getCookie(c_name)
+{
+    if (document.cookie.length > 0)
+    {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1)
+        {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+ }
+
+$('.ebutton').click(function(){
+    var id = $(this).attr("data-id");
+
+    $("#buttonloc_"+id).show();
+    $("#editloc_"+id).hide();
+
+});
+
+
+$('.sbutton').click(function(){
+    var cfastatus = $(this).attr("data-cfastatus");
+    var bibcode = $(this).attr("data-bibcode");
+    var span_value = $(this).attr("data-value");
+
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": getCookie("csrftoken") }
+    });
+
+    $.ajax(
+    {
+        type:"POST",
+        url: "/post_update",
+        data:{
+                cfastatus: cfastatus,
+                bibcode: bibcode,
+                span_value: span_value
+        },
+        success: function( data ) 
+        {
+            $("#buttonloc_"+bibcode).hide();
+            $("#editloc_"+bibcode).show();
+            $("#cfa_status_"+bibcode).text(span_value);
+        }
+     })
+});
+</script>
+
+
+{% endblock %}

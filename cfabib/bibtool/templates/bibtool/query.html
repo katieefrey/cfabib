@@ -1,0 +1,31 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-home %}active{% endblock %}
+
+{% block title %}
+    The Work of Harvard's Women Computers
+{% endblock %}
+
+{% block body %}
+<div id="home" class="container">
+        
+    <br />
+
+    <div class="row">
+
+        <div class="col-12">
+
+            <form action="{% url 'exe_query' %}" method="post">
+                start date: <input name="startdate"><br/>
+                end date: <input name="enddate">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

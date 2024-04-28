@@ -1,0 +1,210 @@
+{% extends "bibtool/base.html" %}
+{% load static %}
+
+{% block nav-search %}active{% endblock %}
+
+{% block title %}
+    CfA Bibliography
+{% endblock %}
+
+{% block body %}
+<div id="home" class="container-fluid">
+    <div class="row py-md-3 pl-md-5">
+        <h2>CfA Bibliography Author Search Results</h2>
+        <br>
+    </div>
+    
+
+    <div class="row flex-xl-nowrap">
+
+    <div class="col-12 col-md-3 col-xl-2 py-md-3 pl-md-5 bd-sidebar">
+
+        <h4>Search Query</h4>
+            <strong>Date Range:</strong><br/>
+            {{daterange}}
+            <br/><br/>
+            <strong>Author List:</strong><br/>
+            {% for a in authorlist %}
+                {{a}}<br/>
+            {% endfor %}
+            <br/><br/>
+    </div>
+        
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
+
+        <h4>Graphs</h4>
+
+            <div id="authorgraph"></div>
+
+            <div id="journalgraph"></div>
+
+            <table border=1>
+            {% for x in authors reversed %}
+            
+                <tr>
+                    <td><strong>{{x.name}}</strong></td>
+                    <td>
+                        <table border=1>
+                            <tr>
+                                <td></td>
+                                <th>Articles</th>
+                                <th>First Author</th>
+                                <th>Citations</th>
+                            </tr>
+                            <tr>
+                                <td>Refereed</td>
+                                <td>{{x.ref_art}}</td>
+                                <td>{{x.firstauth_ref}}</td>
+                                <td>{{x.ref_cite}}</td>
+                            </tr>
+                            <tr>
+                                <td>Non Refereed</td>
+                                <td>{{x.nonref_art}}</td>
+                                <td>{{x.firstauth_nonref}}</td>
+                                <td>{{x.nonref_cite}}</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>{{x.total_art}}</td>
+                                <td>{{x.fauth}}</td>
+                                <td>{{x.total_cite}}</td>
+                            </tr>
+
+                        </table>
+                        <br/>
+                </tr>
+            
+            {% endfor %}
+            </table>
+
+            <br/><br/>
+    
+
+
+            <table border=1>
+                <tr>
+                    <th>Author Name</th>
+                    <th>Total Articles</th>
+                    <th>Total Citations</th>
+                    <th>Refereed Articles</th>
+                    <th>Refereed Citations</th>
+                    <th>Non Refereed Articles</th>
+                    <th>Non Refereed Citations</th>
+                </tr>
+                {% for x in authors reversed %}
+                    <tr>
+                        <td>{{x.name}}</td>
+                        <td>{{x.total_art}}</td>
+                        <td>{{x.total_cite}}</td>
+                        <td>{{x.ref_art}}</td>
+                        <td>{{x.ref_cite}}</td>
+                        <td>{{x.nonref_art}}</td>
+                        <td>{{x.nonref_cite}}</td>
+                    </tr>
+            {% endfor %}
+            </table>
+
+        </main>
+    </div>
+</div>
+
+<script>
+var trace1 = {
+  x: [{% for x in gauthors %}{{x.firstauth_ref}},{% endfor %}],
+  y: [{% for x in gauthors %}'{{x.name}}',{% endfor %}],
+  name: 'First Author, Refereed',
+  orientation: 'h',
+  type: 'bar',
+  marker: {
+    color: 'rgba(55,128,191,1)',
+    width: 1
+  }
+};
+
+var trace2 = {
+  x: [{% for x in gauthors %}{{x.gref_art}},{% endfor %}],
+  y: [{% for x in gauthors %}'{{x.name}}',{% endfor %}],
+  name: 'Refereed',
+  orientation: 'h',
+  marker: {
+    color: 'rgba(55,128,191,0.6)',
+    width: 1
+  },
+  type: 'bar'
+};
+
+var trace3 = {
+  x: [{% for x in gauthors %}{{x.firstauth_nonref}},{% endfor %}],
+  y: [{% for x in gauthors %}'{{x.name}}',{% endfor %}],
+  name: 'First Author, Not Refereed',
+  orientation: 'h',
+  type: 'bar',
+  marker: {
+    color: 'rgba(255,153,51,1)',
+    width: 1
+  }
+};
+
+var trace4 = {
+  x: [{% for x in gauthors %}{{x.gnonref_art}},{% endfor %}],
+  y: [{% for x in gauthors %}'{{x.name}}',{% endfor %}],
+  name: 'Not Refereed',
+  orientation: 'h',
+  type: 'bar',
+  marker: {
+    color: 'rgba(255,153,51,0.6)',
+    width: 1
+  }
+};
+
+var data = [trace1, trace2, trace3, trace4];
+
+
+
+var layout = {
+  title: 'Number of Publications',
+  barmode: 'stack',
+  autosize: false,
+  width: 800,
+  height: {{gauthnum}},
+  margin: {
+    l: 200,
+    r: 50,
+    b: 100,
+    t: 100,
+    pad: 4
+    }
+};
+
+Plotly.newPlot('authorgraph', data, layout);
+</script>
+
+<script>
+var jdata = [{
+  type: 'bar',
+  x: [{% for y in journals %}{{y.total_art}},{% endfor %}],
+  y: [{% for y in journals %}'{{y.journal}}',{% endfor %}],
+  orientation: 'h'
+}];
+
+var jlayout = {
+  title: 'Number of Publications',
+  barmode: 'stack',
+  autosize: false,
+  width: 900,
+  height: {{jnum}}*35,
+  margin: {
+    l: 500,
+    r: 50,
+    b: 100,
+    t: 100,
+    pad: 4
+    }
+};
+
+Plotly.newPlot('journalgraph', jdata, jlayout);
+</script>
+
+
+
+{% endblock %}
